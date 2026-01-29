@@ -62,10 +62,11 @@ public class Utils {
      * 字符串转坐标
      */
     public static Position strToPos(String str) {
-        double x = Double.valueOf(str.split(":")[0]);
-        double y = Double.valueOf(str.split(":")[1]);
-        double z = Double.valueOf(str.split(":")[2]);
-        Level level = Festival.getInstance().getServer().getLevelByName(str.split(":")[3]);
+        String[] strings = str.split(":");
+        double x = Double.parseDouble(strings[0]);
+        double y = Double.parseDouble(strings[1]);
+        double z = Double.parseDouble(strings[2]);
+        Level level = Festival.getInstance().getServer().getLevelByName(strings[3]);
         return new Position(x+0.5, y, z+0.5, level);
     }
 
@@ -192,7 +193,7 @@ public class Utils {
 
     public static void sendMessageToAll(String string){
         for (Player player : Festival.getInstance().getServer().getOnlinePlayers().values()) {
-            player.sendMessage(string);
+            player.sendMessage(replaceTipsVar(string, player));
         }
     }
     public static void sendTitleToAll(String title,String subtitle,int fadeIn,int stay,int fadeOut){
