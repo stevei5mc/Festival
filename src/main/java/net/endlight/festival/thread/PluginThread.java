@@ -3,14 +3,13 @@ package net.endlight.festival.thread;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.ConsoleCommandSender;
-import cn.nukkit.level.Position;
 import cn.nukkit.level.Sound;
 import cn.nukkit.utils.Config;
 import net.endlight.festival.Festival;
 import net.endlight.festival.utils.Utils;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class PluginThread extends Thread {
 
@@ -24,17 +23,16 @@ public class PluginThread extends Thread {
 
     @Override
     public void run() {
-        Calendar calendar = Calendar.getInstance();
-        Date date = new Date();
-        calendar.set(this.config.getInt("Calendar.Year"),
-                (this.config.getInt("Calendar.Month") - 1),
+        LocalDateTime targetDateTime = LocalDateTime.of(
+                this.config.getInt("Calendar.Year"),
+                this.config.getInt("Calendar.Month"),
                 this.config.getInt("Calendar.Day"),
                 this.config.getInt("Calendar.Hour"),
                 this.config.getInt("Calendar.Minute"),
-                this.config.getInt("Calendar.Second"));
-
-        long endTime = calendar.getTimeInMillis();
-        long startTime = date.getTime();
+                this.config.getInt("Calendar.Second")
+        );
+        long endTime = targetDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long startTime = System.currentTimeMillis();
         long midTime = (endTime - startTime) / 1000;
 
         while (midTime > 0) {
